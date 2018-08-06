@@ -8,8 +8,8 @@ TIMEZONE="America/Denver"
 # Script Settings
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 WP="$DIR/wp"
-LOG_FILE="$LOG_DIR/wp-upgrader.log"
-LOG_ERROR_FILE="$LOG_DIR/wp-upgrader-error.log"
+LOG_FILE="$LOG_DIR/wp-updater.log"
+LOG_ERROR_FILE="$LOG_DIR/wp-updater-error.log"
 TIMESTAMP="$(TZ="$TIMEZONE" date "+%Y-%m-%d%l:%M:%S %p")"
 GREEN="\e[32m"
 WHITE="\e[37m"
@@ -51,3 +51,5 @@ for DIRECTORY in $(find "$WWW" -name 'wp-config.php' | xargs dirname); do
 done
 
 echo -e "\n" | tee -a "$LOG_FILE" -a "$LOG_ERROR_FILE"
+echo -e "Check the log files for details.\n$LOG_FILE\n$LOG_ERROR_FILE\n"
+
