@@ -19,17 +19,34 @@ Doing this every night will help keep your server secure from WordPress exploits
 
 Just clone or unzip these scripts somewhere on your server and set up a cron job to call them each night.
 
-> WARNING: Do not run this as root!
+> WARNING: Do not run these scripts as root!
 
-Use the apache/httpd user instead by running (assuming your apache/httpd user is "www-data"):
+### VPS Server
+
+If you have a VPS server (or have root access), it's best to set up a crontab entry for the apache/httpd user. 
+
+So, assuming your apache/httpd user is "www-data" you would run as root:
 
 `crontab -e -u www-data`
+
+### Shared Hosting
+
+Otherwise, if you are on a shared hosting account, you can add the crontab for your own user:
+
+`crontab -e`
+
+Although it is more likely you will need to configure this via your web-based control panel (i.e. cPanel, etc.)
+
+
+### Crontab Entry:
 
 Example crontab entry:
 
 `0 0 * * * /path/to/wp-update-all.sh 2>&1 >/dev/null`
 
 > Note: You don't have to throw away crontab logs, but once you know the script is working, all relevant logs are stored by the script so they are safe to discard.
+
+### Other Considerations
 
 Make sure that the directory you are writing your logs to and the directory where the scripts are in are writable by the user that runs the scripts.
 
@@ -47,7 +64,7 @@ There are a few variables which you can configure at the top of the `wp-update-a
 
 You should point this to the directory which holds your WordPress installation directories. It will search recursively from this directory.
 
-`LOG_DIR="/var/www/logs"`
+`LOG_DIR="/tmp"`
 
 This is the directory where you want the script to write the success/error log files to.
 
