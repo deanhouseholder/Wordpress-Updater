@@ -3,12 +3,12 @@
 WP="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/wp"
 
 # Upgrade WordPress install
-$WP --allow-root core update
-$WP --allow-root core update-db
+$WP core update
+$WP core update-db
 
 # Upgrade Plugins
-$WP --allow-root plugin update --all
+$WP plugin update --all
 
 # Upgrade Themes
-$WP --allow-root theme update --all
+$WP theme update --all
 

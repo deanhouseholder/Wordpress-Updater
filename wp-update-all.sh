@@ -2,12 +2,12 @@
 
 # User Settings
 WWW="/var/www"
-LOG_DIR="/var/log"
+LOG_DIR="/tmp"
 TIMEZONE="America/Denver"
 
 # Script Settings
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
-WP="$DIR/wp"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
+WP="$SCRIPT_DIR/wp" # Path to WP CLI binary
 LOG_FILE="$LOG_DIR/wp-updater.log"
 LOG_ERROR_FILE="$LOG_DIR/wp-updater-error.log"
 TIMESTAMP="$(TZ="$TIMEZONE" date "+%Y-%m-%d%l:%M:%S %p")"
@@ -32,7 +32,7 @@ echo -e "# $TIMESTAMP #" | tee -a "$LOG_FILE" -a "$LOG_ERROR_FILE"
 echo -e "#########################\n" | tee -a "$LOG_FILE" -a "$LOG_ERROR_FILE"
 
 # Check for updates to the WP-CLI
-$WP --allow-root cli update 1>>$LOG_FILE 2>>$LOG_ERROR_FILE
+yes | $WP cli update 1>>$LOG_FILE 2>>$LOG_ERROR_FILE
 
 for DIRECTORY in $(find "$WWW" -name 'wp-config.php' | xargs dirname); do
     cd "$DIRECTORY"
@@ -40,14 +40,14 @@ for DIRECTORY in $(find "$WWW" -name 'wp-config.php' | xargs dirname); do
     echo -e "\n------------------\n\nUpgrading $SITENAME...\n" | tee -a "$LOG_FILE" -a "$LOG_ERROR_FILE"
 
     # Upgrade WordPress install
-    $WP --allow-root core update 1>>$LOG_FILE 2>>$LOG_ERROR_FILE
-    $WP --allow-root core update-db 1>>$LOG_FILE 2>>$LOG_ERROR_FILE
+    $WP core update 1>>$LOG_FILE 2>>$LOG_ERROR_FILE
+    $WP core update-db 1>>$LOG_FILE 2>>$LOG_ERROR_FILE
 
     # Upgrade Plugins
-    $WP --allow-root plugin update --all 1>>$LOG_FILE 2>>$LOG_ERROR_FILE
+    $WP plugin update --all 1>>$LOG_FILE 2>>$LOG_ERROR_FILE
 
     # Upgrade Themes
-    $WP --allow-root theme update --all 1>>$LOG_FILE 2>>$LOG_ERROR_FILE
+    $WP theme update --all 1>>$LOG_FILE 2>>$LOG_ERROR_FILE
 done
 
 echo -e "\n" | tee -a "$LOG_FILE" -a "$LOG_ERROR_FILE"
